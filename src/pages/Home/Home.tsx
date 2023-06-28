@@ -1,116 +1,80 @@
 import { FC } from "react";
 import AddBlogList from "../../components/AddBlogList/AddBlogList";
 import Avatar from "../../ui/Avatar/Avatar";
-import styles from './Home.module.scss'
-import avatar from '../../assets/person.png'
+import styles from "./Home.module.scss";
 import Posts from "../../components/Posts/Posts";
-import ProfileList from "../../components/ProfileList/ProfileList"
 import RecommendedBlog from "../../ui/RecommendedBlog/RecommendedBlog";
 import Post from "../../components/Post/Post";
-
-const Home:FC = () => {
-
-     const tabs = [
-        {
-          text: "For you",
-          name: "For you",
-          value: "For you",
-          onChange: (arg: any) => {},
-        },
-        {
-          text: "Popular",
-          name: "Popular",
-          value: "Popular",
-          onChange: (arg: any) => {},
-        },
-        {
-          text: "New",
-          name: "New",
-          value: "New",
-          onChange: (arg: any) => {},
-        },
-        {
-          text: "Your tags",
-          name: "Your tags",
-          value: "Your tags",
-          onChange: (arg: any) => {},
-        },
-      ];
-      const mockPosts = [
-        {
-          id: "1",
-          name: "Post 1",
-          description: "Description of post 1",
-          likes: 10,
-          imgUrl: "https://picsum.photos/id/1/200/200",
-          time: 2,
-          liked: false,
-          comented: false,
-          folowed: false,
-          coments: [],
-        },
-        {
-          id: "4",
-          name: "Post 4",
-          description: "Description of post 4",
-          likes: 40,
-          imgUrl: "https://picsum.photos/id/4/200/200",
-          time: 4,
-          liked: true,
-          comented: false,
-          folowed: true,
-          coments: [],
-        },
-        {
-          id: "3",
-          name: "Post 5",
-          description: "Description of post 4",
-          likes: 40,
-          imgUrl: "https://picsum.photos/id/4/200/200",
-          time: 4,
-          liked: true,
-          comented: false,
-          folowed: true,
-          coments: [],
-        },
-      ];
-      const profiles = [
-        { userName: "oleg", desc: "hallo, I am oleg" },
-        { userName: "aboba", desc: "hallo, I am oleg" },
-        { userName: "alex", desc: "hallo, I am oleg" },
-      ];
-
-    return (
+import { useAppSelector } from "../../hooks/useAppSelect/useAppSelector";
+import { addHostName } from "../../helpFunctions/addHostname";
+import { useRecomendUserQuery } from "../../services/user";
+const Home: FC = () => {
+  const { avatar_url, id } = useAppSelector(state => state.auth.user!);
+  const { data } = useRecomendUserQuery(id);
+  const tabs = [
+    {
+      text: "Following",
+      name: "home",
+      value: "following",
+      onChange: (arg: any) => {},
+    },
+    {
+      text: "Popular",
+      name: "home",
+      value: "popular",
+      onChange: (arg: any) => {},
+    },
+    {
+      text: "New",
+      name: "home",
+      value: "new",
+      onChange: (arg: any) => {},
+    },
+  ];
+  console.log(data);
+  return (
     <div className={styles.wrapper}>
 
         <div className={styles.left}>
             <div className={styles.blockAdd}>
                 <div className={styles.mr}>
-                  <Avatar userId="2" width={70} height={70} url={avatar}/>  
+                  <Avatar width={70} height={70} url={addHostName(avatar_url)} id={id}/>  
                 </div>
                
                 <AddBlogList/> 
             </div>
-            <Posts tabs={tabs} posts={mockPosts} />
+            <Posts tabs={tabs} id={id} />
         </div>   
         <div className={styles.right}>
-            
-            <ProfileList  title='Check out this blogs' profiles={profiles}/>
-            
-            <div className={styles.recomendblog}>
+            <div>
+              <h2 className={styles.title}>Check out this blogs</h2>
+              <div>
+                <div className={styles.blog}>
+                   <RecommendedBlog userName="Maks" desc="My manager Denis" />
+                </div>
+               
+                <div className={styles.blog}>
+                   <RecommendedBlog userName="Maks" desc="My manager Denis"/>
+                </div>
+                <div className={styles.blog}>
+                   <RecommendedBlog userName="Maks" desc="My manager Denis"/>
+                </div>
+              </div>
+            </div>
+            <div>
             <h2 className={styles.title2}>Recomended for you</h2>
               <div>
                 <div className={styles.blog}>
-                  <Post id='5' name='Hooray' description='Description of post 4' likes={40} liked={false}  imgUrl= "https://images.pexels.com/photos/2295744/pexels-photo-2295744.jpeg?cs=srgb&dl=pexels-alex-andrews-2295744.jpg&fm=jpg" time= {2} comented = {false} folowed= {false} coments= {[]} />
+                  <Post id=5 name='Hooray' description='Description of post 4' likes={40} liked={false}  imgUrl= "https://images.pexels.com/photos/2295744/pexels-photo-2295744.jpeg?cs=srgb&dl=pexels-alex-andrews-2295744.jpg&fm=jpg" time= "2 hours ago" comented = {false} folowed= {false} coments= {[]} />
                 </div>
                
                 
               </div>
             </div>
         </div>
-            
+      </div>
     </div>
-    )
-}
+  );
+};
 
 export default Home;
